@@ -1,8 +1,8 @@
+from flask import g, current_app
 from app.models.ticket_system import TicketSystem
 
 def get_db():
     """获取数据库实例"""
-    from flask import current_app, g
     if 'db' not in g:
         g.db = TicketSystem(current_app.config['DATABASE'])
     return g.db

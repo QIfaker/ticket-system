@@ -9,6 +9,10 @@ def create_app(test_config=None):
     else:
         app.config.update(test_config)
     
+    # 注册数据库关闭函数
+    from app.models import close_db
+    app.teardown_appcontext(close_db)
+    
     # 注册蓝图
     from app.routes import admin, auth, tickets
     app.register_blueprint(admin.bp)
