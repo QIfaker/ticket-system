@@ -1,18 +1,20 @@
 import os
-from datetime import timedelta
 
 class Config:
     # 基础配置
-    SECRET_KEY = os.urandom(24)
-    BASE_DIR = os.path.abspath(os.path.dirname(__file__))
-    
-    # 数据库配置
-    DATABASE = os.path.join(BASE_DIR, 'ticket_system.db')
-    
-    # Session配置
-    PERMANENT_SESSION_LIFETIME = timedelta(days=7)
+    SECRET_KEY = os.environ.get('SECRET_KEY') or 'dev'
+    DATABASE = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'ticket_system.db')
     
     # 应用配置
-    DEBUG = True
-    PORT = 8080
-    HOST = '0.0.0.0' 
+    TITLE = '车站售票系统'
+    ADMIN_EMAIL = 'admin@example.com'
+    
+    # 数据库配置
+    DB_INIT_SQL = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'schema.sql')
+    
+    # 会话配置
+    PERMANENT_SESSION_LIFETIME = 3600  # 会话有效期（秒）
+    
+    # 上传配置
+    UPLOAD_FOLDER = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'uploads')
+    MAX_CONTENT_LENGTH = 16 * 1024 * 1024  # 最大上传大小（16MB）

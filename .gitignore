@@ -40,4 +40,5 @@ ENV/
 
 # Local configuration
 instance/
-.env 
+.env
+uploads/ 
