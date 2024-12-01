@@ -1,0 +1,436 @@
+/* 主题颜色 - 使用更现代的配色方案 */
+:root {
+    --primary-color: #4a90e2;      /* 主色调：清新蓝 */
+    --secondary-color: #2ecc71;    /* 次要色：翠绿 */
+    --accent-color: #f39c12;       /* 强调色：橙黄 */
+    --dark-color: #2c3e50;         /* 深色：深蓝灰 */
+    --light-color: #f5f6fa;        /* 浅色：淡灰白 */
+    --danger-color: #e74c3c;       /* 危险色：红色 */
+    --success-color: #27ae60;      /* 成功色：绿色 */
+    --warning-color: #f1c40f;      /* 警告色：黄色 */
+    --info-color: #3498db;         /* 信息色：蓝色 */
+    --text-color: #2d3436;         /* 文本色：深灰 */
+    --border-radius: 10px;         /* 统一圆角 */
+    --box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* 统一阴影 */
+}
+
+/* 全局样式优化 */
+body {
+    background-color: var(--light-color);
+    font-family: 'Microsoft YaHei', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+    color: var(--text-color);
+    line-height: 1.6;
+}
+
+/* 导航栏样式优化 */
+.navbar {
+    background: linear-gradient(135deg, var(--dark-color), #34495e);
+    padding: 1rem 0;
+    box-shadow: var(--box-shadow);
+}
+
+.navbar-brand {
+    font-weight: 600;
+    font-size: 1.5rem;
+    color: white !important;
+    text-shadow: 1px 1px 2px rgba(0,0,0,0.2);
+}
+
+.nav-link {
+    font-weight: 500;
+    padding: 0.5rem 1rem;
+    color: rgba(255,255,255,0.9) !important;
+    transition: all 0.3s ease;
+}
+
+.nav-link:hover {
+    color: white !important;
+    transform: translateY(-2px);
+}
+
+/* 卡片样式优化 */
+.card {
+    border: none;
+    border-radius: var(--border-radius);
+    box-shadow: var(--box-shadow);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    background: white;
+    overflow: hidden;
+}
+
+.card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 6px 12px rgba(0,0,0,0.15);
+}
+
+.card-title {
+    color: var(--dark-color);
+    font-weight: 600;
+    margin-bottom: 1.5rem;
+}
+
+/* 表单样式优化 */
+.form-control {
+    border-radius: var(--border-radius);
+    border: 2px solid #e9ecef;
+    padding: 0.75rem 1rem;
+    transition: all 0.3s ease;
+}
+
+.form-control:focus {
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 0.2rem rgba(74, 144, 226, 0.25);
+}
+
+.form-label {
+    font-weight: 500;
+    color: var(--dark-color);
+    margin-bottom: 0.5rem;
+}
+
+/* 按钮样式优化 */
+.btn {
+    border-radius: var(--border-radius);
+    padding: 0.75rem 1.5rem;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+}
+
+.btn::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 0;
+    height: 0;
+    background: rgba(255,255,255,0.2);
+    border-radius: 50%;
+    transform: translate(-50%, -50%);
+    transition: width 0.6s ease, height 0.6s ease;
+}
+
+.btn:hover::after {
+    width: 300%;
+    height: 300%;
+}
+
+.btn-primary {
+    background: linear-gradient(135deg, var(--primary-color), #357abd);
+    border: none;
+}
+
+.btn-secondary {
+    background: linear-gradient(135deg, var(--secondary-color), #27ae60);
+    border: none;
+}
+
+.btn-danger {
+    background: linear-gradient(135deg, var(--danger-color), #c0392b);
+    border: none;
+}
+
+/* 表格样式优化 */
+.table {
+    background: white;
+    border-radius: var(--border-radius);
+    overflow: hidden;
+    box-shadow: var(--box-shadow);
+}
+
+.table thead th {
+    background: linear-gradient(135deg, var(--dark-color), #34495e);
+    color: white;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    padding: 1rem;
+    border: none;
+}
+
+.table tbody tr {
+    transition: all 0.3s ease;
+}
+
+.table tbody tr:hover {
+    background-color: rgba(74, 144, 226, 0.1);
+    transform: scale(1.01);
+}
+
+/* 警告消息样式优化 */
+.alert {
+    border-radius: var(--border-radius);
+    border: none;
+    padding: 1rem 1.5rem;
+    margin-bottom: 1.5rem;
+    box-shadow: var(--box-shadow);
+    animation: slideInDown 0.5s ease-out;
+}
+
+.alert-success {
+    background: linear-gradient(135deg, #d4edda, #c3e6cb);
+    color: var(--success-color);
+}
+
+.alert-danger {
+    background: linear-gradient(135deg, #f8d7da, #f5c6cb);
+    color: var(--danger-color);
+}
+
+.alert-warning {
+    background: linear-gradient(135deg, #fff3cd, #ffeeba);
+    color: #856404;
+}
+
+/* 动画效果 */
+@keyframes slideInDown {
+    from {
+        transform: translateY(-20px);
+        opacity: 0;
+    }
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+
+/* 响应式设计优化 */
+@media (max-width: 768px) {
+    .container {
+        padding: 15px;
+    }
+    
+    .card {
+        margin-bottom: 20px;
+    }
+    
+    .btn {
+        width: 100%;
+        margin-bottom: 10px;
+    }
+    
+    .table-responsive {
+        border-radius: var(--border-radius);
+        box-shadow: var(--box-shadow);
+    }
+}
+
+/* 加载动画 */
+.loading {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(255,255,255,0.9);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 9999;
+}
+
+.loading::after {
+    content: '';
+    width: 50px;
+    height: 50px;
+    border: 5px solid #f3f3f3;
+    border-top: 5px solid var(--primary-color);
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+/* 表单组样式 */
+.form-group {
+    margin-bottom: 1.5rem;
+    position: relative;
+}
+
+.form-group label {
+    position: absolute;
+    top: -10px;
+    left: 10px;
+    background: white;
+    padding: 0 5px;
+    font-size: 0.9rem;
+    color: var(--primary-color);
+    transition: all 0.3s ease;
+}
+
+.form-group:focus-within label {
+    color: var(--primary-color);
+    transform: translateY(-2px);
+}
+
+/* 输入框图标 */
+.input-icon {
+    position: relative;
+}
+
+.input-icon i {
+    position: absolute;
+    top: 50%;
+    left: 15px;
+    transform: translateY(-50%);
+    color: #adb5bd;
+}
+
+.input-icon input {
+    padding-left: 40px;
+}
+
+/* 左侧边栏和主内容区域布局 */
+.wrapper {
+    display: flex;
+    width: 100%;
+    min-height: 100vh;
+    padding-top: 56px;  /* 顶部导航栏的高度 */
+}
+
+.sidebar {
+    width: 250px;
+    min-width: 250px;  /* 添加最小宽度 */
+    position: fixed;
+    top: 56px;
+    left: 0;
+    height: calc(100vh - 56px);
+    z-index: 999;
+    background: var(--dark-color);
+    color: #fff;
+    transition: all 0.3s ease;
+    box-shadow: 2px 0 5px rgba(0,0,0,0.1);
+    overflow-y: auto;  /* 添加滚动条 */
+}
+
+/* 主内容区域 */
+#content {
+    flex: 1;
+    width: calc(100% - 250px);
+    margin-left: 250px;
+    padding: 20px;
+    min-height: calc(100vh - 56px);
+    transition: all 0.3s ease;
+    background-color: var(--light-color);
+}
+
+/* 侧边栏菜单样式 */
+.sidebar .sidebar-header {
+    padding: 20px;
+    background: rgba(0,0,0,0.1);
+}
+
+.sidebar ul.components {
+    padding: 20px 0;
+}
+
+.sidebar ul li a {
+    padding: 10px 20px;
+    font-size: 1.1em;
+    display: block;
+    color: #fff;
+    text-decoration: none;
+    transition: all 0.3s ease;
+}
+
+.sidebar ul li a:hover,
+.sidebar ul li a.active {
+    color: var(--primary-color);
+    background: rgba(255,255,255,0.1);
+}
+
+.sidebar ul ul a {
+    font-size: 0.9em !important;
+    padding-left: 40px !important;
+    background: rgba(0,0,0,0.2);
+}
+
+.sidebar .dropdown-toggle::after {
+    float: right;
+    margin-top: 8px;
+}
+
+/* 响应式设计 */
+@media (max-width: 768px) {
+    .sidebar {
+        margin-left: -250px;
+    }
+    
+    .sidebar.active {
+        margin-left: 0;
+    }
+    
+    #content {
+        width: 100%;
+        margin-left: 0;
+    }
+    
+    #content.active {
+        margin-left: 250px;
+        width: calc(100% - 250px);
+    }
+    
+    /* 添加侧边栏切换按钮 */
+    .sidebar-toggle {
+        display: block;
+        position: fixed;
+        top: 70px;
+        left: 10px;
+        z-index: 1000;
+        background: var(--primary-color);
+        color: white;
+        padding: 10px;
+        border-radius: 50%;
+        box-shadow: var(--box-shadow);
+        cursor: pointer;
+    }
+}
+
+/* 首页特点样式 */
+.feature-item {
+    padding: 20px;
+    border-radius: var(--border-radius);
+    transition: all 0.3s ease;
+}
+
+.feature-item:hover {
+    background: white;
+    box-shadow: var(--box-shadow);
+    transform: translateY(-5px);
+}
+
+.feature-item i {
+    transition: transform 0.3s ease;
+}
+
+.feature-item:hover i {
+    transform: scale(1.1);
+}
+
+.feature-item h6 {
+    margin: 1rem 0;
+    font-weight: 600;
+    color: var(--dark-color);
+}
+
+.feature-item p {
+    margin-bottom: 0;
+    line-height: 1.4;
+}
+
+/* 公告样式 */
+.alert-info {
+    background: linear-gradient(135deg, #e1f5fe, #b3e5fc);
+    color: #0288d1;
+    border: none;
+}
+
+.alert-info i {
+    margin-right: 8px;
+} 

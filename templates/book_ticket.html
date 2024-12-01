@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+
+{% block title %}购票{% endblock %}
+
+{% block content %}
+<h2>购票</h2>
+<form method="POST" class="col-md-6">
+    <div class="mb-3">
+        <label class="form-label">车次</label>
+        <input type="text" name="train_id" class="form-control" required>
+    </div>
+    <div class="mb-3">
+        <label class="form-label">乘客姓名</label>
+        <input type="text" name="passenger_name" class="form-control" required>
+    </div>
+    <div class="mb-3">
+        <label class="form-label">身份证号</label>
+        <input type="text" name="passenger_id" class="form-control" required>
+    </div>
+    <div class="mb-3 form-check">
+        <input type="checkbox" name="is_group" class="form-check-input" id="is_group">
+        <label class="form-check-label" for="is_group">团体票</label>
+    </div>
+    <button type="submit" class="btn btn-primary">提交订单</button>
+</form>
+{% endblock %} 

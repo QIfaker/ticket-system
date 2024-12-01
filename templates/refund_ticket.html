@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+
+{% block title %}退票{% endblock %}
+
+{% block content %}
+<h2>退票</h2>
+<form method="POST" class="col-md-6">
+    <div class="mb-3">
+        <label class="form-label">票号</label>
+        <input type="number" name="ticket_id" class="form-control" required>
+    </div>
+    <button type="submit" class="btn btn-danger">申请退票</button>
+</form>
+{% endblock %} 

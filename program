@@ -1,0 +1,232 @@
+import sqlite3
+from datetime import datetime
+
+class TicketSystem:
+    def __init__(self):
+        # 连接到SQLite数据库
+        self.conn = sqlite3.connect('ticket_system.db')
+        self.cursor = self.conn.cursor()
+        self.create_tables()
+    
+    def create_tables(self):
+        # 创建车次信息表
+        self.cursor.execute('''
+        CREATE TABLE IF NOT EXISTS trains (
+            train_id TEXT PRIMARY KEY,     -- 车次编号
+            departure TEXT,                -- 出发站
+            destination TEXT,              -- 目的站
+            departure_time TEXT,           -- 发车时间
+            arrival_time TEXT,             -- 到达时间
+            total_seats INTEGER,           -- 总座位数
+            price REAL                     -- 票价
+        )
+        ''')
+        
+        # 创建车票订单表
+        self.cursor.execute('''
+        CREATE TABLE IF NOT EXISTS tickets (
+            ticket_id INTEGER PRIMARY KEY AUTOINCREMENT,
+            train_id TEXT,                 -- 车次编号
+            passenger_name TEXT,           -- 乘客姓名
+            passenger_id TEXT,             -- 乘客身份证号
+            seat_number INTEGER,           -- 座位号
+            booking_time TEXT,             -- 订票时间
+            status TEXT,                   -- 票状态(已售/已退)
+            is_group BOOLEAN,              -- 是否团体票
+            FOREIGN KEY (train_id) REFERENCES trains(train_id)
+        )
+        ''')
+        
+        # 创建售票统计表
+        self.cursor.execute('''
+        CREATE TABLE IF NOT EXISTS sales_statistics (
+            date TEXT,                     -- 日期
+            train_id TEXT,                 -- 车次编号
+            tickets_sold INTEGER,          -- 售出票数
+            total_amount REAL,             -- 总金额
+            FOREIGN KEY (train_id) REFERENCES trains(train_id)
+        )
+        ''')
+        
+        # 添加用户表
+        self.cursor.execute('''
+        CREATE TABLE IF NOT EXISTS users (
+            username TEXT PRIMARY KEY,
+            password TEXT NOT NULL,
+            is_admin BOOLEAN DEFAULT FALSE
+        )
+        ''')
+        
+        # 添加默认管理员账户
+        try:
+            self.cursor.execute('''
+            INSERT INTO users (username, password, is_admin) 
+            VALUES (?, ?, ?)
+            ''', ('admin', 'admin123', True))
+            self.conn.commit()
+        except sqlite3.IntegrityError:
+            pass  # 如果管理员已存在则跳过
+        
+        self.conn.commit()
+
+    def add_train(self, train_id, departure, destination, departure_time, 
+                  arrival_time, total_seats, price):
+        """添加新车次"""
+        try:
+            self.cursor.execute('''
+            INSERT INTO trains VALUES (?, ?, ?, ?, ?, ?, ?)
+            ''', (train_id, departure, destination, departure_time, 
+                 arrival_time, total_seats, price))
+            self.conn.commit()
+            return True
+        except sqlite3.Error as e:
+            print(f"添加车次失败: {e}")
+            return False
+
+    def search_trains(self, departure=None, destination=None):
+        """查询车次"""
+        query = "SELECT * FROM trains WHERE 1=1"
+        params = []
+        
+        if departure:
+            query += " AND departure = ?"
+            params.append(departure)
+        if destination:
+            query += " AND destination = ?"
+            params.append(destination)
+            
+        try:
+            self.cursor.execute(query, params)
+            return self.cursor.fetchall()
+        except sqlite3.Error as e:
+            print(f"查询失败: {e}")
+            return []
+
+    def book_ticket(self, train_id, passenger_name, passenger_id, is_group=False):
+        """订票功能"""
+        try:
+            # 检查余票
+            self.cursor.execute('''
+            SELECT total_seats, 
+                   (SELECT COUNT(*) FROM tickets 
+                    WHERE train_id = ? AND status = '已售') as sold_seats 
+            FROM trains WHERE train_id = ?
+            ''', (train_id, train_id))
+            
+            result = self.cursor.fetchone()
+            if not result:
+                return False, "车次不存在"
+                
+            total_seats, sold_seats = result
+            if sold_seats >= total_seats:
+                return False, "无余票"
+            
+            # 分配座位号
+            seat_number = sold_seats + 1
+            
+            # 创建订单
+            self.cursor.execute('''
+            INSERT INTO tickets 
+            (train_id, passenger_name, passenger_id, seat_number, 
+             booking_time, status, is_group)
+            VALUES (?, ?, ?, ?, ?, ?, ?)
+            ''', (train_id, passenger_name, passenger_id, seat_number,
+                 datetime.now().strftime('%Y-%m-%d %H:%M:%S'), '已售', is_group))
+            
+            self.conn.commit()
+            return True, f"订票成功，座位号: {seat_number}"
+            
+        except sqlite3.Error as e:
+            print(f"订票失败: {e}")
+            return False, "订票失败"
+
+    def refund_ticket(self, ticket_id):
+        """退票功能"""
+        try:
+            self.cursor.execute('''
+            UPDATE tickets SET status = '已退' 
+            WHERE ticket_id = ? AND status = '已售'
+            ''', (ticket_id,))
+            
+            if self.cursor.rowcount > 0:
+                self.conn.commit()
+                return True, "退票成功"
+            return False, "退票失败，票不存在或已退"
+            
+        except sqlite3.Error as e:
+            print(f"退票失败: {e}")
+            return False, "退票失败"
+
+    def update_train_price(self, train_id, new_price):
+        """更新票价"""
+        try:
+            self.cursor.execute('''
+            UPDATE trains SET price = ? WHERE train_id = ?
+            ''', (new_price, train_id))
+            
+            if self.cursor.rowcount > 0:
+                self.conn.commit()
+                return True, "票价更新成功"
+            return False, "更新失败，车次不存在"
+            
+        except sqlite3.Error as e:
+            print(f"更新票价失败: {e}")
+            return False, "更新票价失败"
+
+    def generate_sales_report(self, start_date, end_date):
+        """生成销售报表"""
+        try:
+            self.cursor.execute('''
+            SELECT t.train_id, 
+                   COUNT(*) as tickets_sold,
+                   SUM(tr.price) as total_amount
+            FROM tickets t
+            JOIN trains tr ON t.train_id = tr.train_id
+            WHERE t.status = '已售'
+            AND date(t.booking_time) BETWEEN ? AND ?
+            GROUP BY t.train_id
+            ''', (start_date, end_date))
+            
+            return self.cursor.fetchall()
+            
+        except sqlite3.Error as e:
+            print(f"生成报表失败: {e}")
+            return []
+
+    def authenticate_user(self, username, password):
+        """验证用户登录"""
+        self.cursor.execute('''
+        SELECT username, is_admin FROM users 
+        WHERE username = ? AND password = ?
+        ''', (username, password))
+        return self.cursor.fetchone()
+
+    def __del__(self):
+        """关闭数据库连接"""
+        self.conn.close()
+
+# 测试代码
+if __name__ == "__main__":
+    system = TicketSystem()
+    
+    # 添加测试车次
+    system.add_train('G100', '北京', '上海', '08:00', '14:00', 400, 553.0)
+    system.add_train('G200', '广州', '武汉', '09:30', '15:30', 350, 463.0)
+    
+    # 测试查询
+    print("查询车次:")
+    print(system.search_trains(departure='北京'))
+    
+    # 测试订票
+    print("\n测试订票:")
+    result, message = system.book_ticket('G100', '张三', '110101199001011234')
+    print(message)
+    
+    # 测试退票
+    print("\n测试退票:")
+    result, message = system.refund_ticket(1)
+    print(message)
+    
+    # 测试生成报表
+    print("\n销售报表:")
+    print(system.generate_sales_report('2024-01-01', '2024-12-31'))

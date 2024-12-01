@@ -1,0 +1,65 @@
+{% extends "base.html" %}
+
+{% block title %}购票{% endblock %}
+
+{% block content %}
+<div class="card">
+    <div class="card-body">
+        <h2 class="card-title">
+            <i class="fas fa-ticket-alt"></i> 购票
+        </h2>
+        
+        <form method="POST" class="row g-3">
+            <div class="col-md-6">
+                <label class="form-label">车次</label>
+                <input type="text" name="train_id" class="form-control" 
+                       value="{{ train_id or '' }}" required>
+            </div>
+            
+            <div class="col-md-6">
+                <label class="form-label">乘客姓名</label>
+                <input type="text" name="passenger_name" class="form-control" 
+                       value="{{ user.real_name if user else '' }}" required>
+                <small class="text-muted">默认使用您的实名信息</small>
+            </div>
+            
+            <div class="col-md-6">
+                <label class="form-label">身份证号</label>
+                <input type="text" name="passenger_id" class="form-control" 
+                       value="{{ user.id_number if user else '' }}" required>
+                <small class="text-muted">默认使用您的身份证号</small>
+            </div>
+            
+            <div class="col-md-6">
+                <div class="form-check mt-4">
+                    <input type="checkbox" name="is_group" class="form-check-input" id="is_group">
+                    <label class="form-check-label" for="is_group">团体票</label>
+                </div>
+            </div>
+            
+            <div class="col-12">
+                <button type="submit" class="btn btn-primary">
+                    <i class="fas fa-shopping-cart"></i> 提交订单
+                </button>
+                <a href="{{ url_for('tickets.search') }}" class="btn btn-secondary">
+                    <i class="fas fa-search"></i> 重新查询
+                </a>
+            </div>
+        </form>
+    </div>
+</div>
+
+<div class="card mt-4">
+    <div class="card-body">
+        <h5 class="card-title">
+            <i class="fas fa-info-circle"></i> 购票须知
+        </h5>
+        <ul class="list-unstyled">
+            <li><i class="fas fa-check text-success"></i> 请确保填写的身份信息准确无误</li>
+            <li><i class="fas fa-check text-success"></i> ��张身份证同一车次只能购买一张票</li>
+            <li><i class="fas fa-check text-success"></i> 团体票请联系客服人工处理</li>
+            <li><i class="fas fa-check text-success"></i> 购票成功后可在"个人车票查询"中查看</li>
+        </ul>
+    </div>
+</div>
+{% endblock %} 

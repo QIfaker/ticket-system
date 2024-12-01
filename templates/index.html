@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+
+{% block title %}首页{% endblock %}
+
+{% block content %}
+<div class="jumbotron">
+    <h1 class="display-4">欢迎使用车站售票系统</h1>
+    <p class="lead">快速便捷的车票预订系统</p>
+    <hr class="my-4">
+    <div class="row">
+        <div class="col-md-4">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">车次查询</h5>
+                    <p class="card-text">查询所有可用车次信息</p>
+                    <a href="/trains" class="btn btn-primary">立即查询</a>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">购票</h5>
+                    <p class="card-text">在线购买车票</p>
+                    <a href="/book_ticket" class="btn btn-primary">立即购票</a>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">退票</h5>
+                    <p class="card-text">办理退票业务</p>
+                    <a href="/refund_ticket" class="btn btn-primary">退票</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %} 

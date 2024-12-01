@@ -1,0 +1,113 @@
+{% extends "base.html" %}
+
+{% block title %}首页{% endblock %}
+
+{% block content %}
+<!-- 欢迎横幅 -->
+<div class="jumbotron text-center mb-5">
+    <h1 class="display-4">
+        <i class="fas fa-train text-primary"></i>
+        欢迎使用车站售票系统
+    </h1>
+    <p class="lead">快速便捷的车票预订系统，让您的旅程更加轻松</p>
+    <hr class="my-4">
+</div>
+
+<!-- 主要功能卡片 -->
+<div class="row">
+    <div class="col-md-4 mb-4">
+        <div class="card feature-card">
+            <div class="card-body">
+                <div class="feature-icon">
+                    <i class="fas fa-search"></i>
+                </div>
+                <h5 class="card-title">车次查询</h5>
+                <p class="card-text">查询所有可用车次信息，实时掌握列车动态</p>
+                <a href="{{ url_for('tickets.search') }}" class="btn btn-primary">
+                    <i class="fas fa-arrow-right"></i> 立即查询
+                </a>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4 mb-4">
+        <div class="card feature-card">
+            <div class="card-body">
+                <div class="feature-icon">
+                    <i class="fas fa-ticket-alt"></i>
+                </div>
+                <h5 class="card-title">在线购票</h5>
+                <p class="card-text">便捷的在线购票系统，轻松完成车票预订</p>
+                <a href="{{ url_for('tickets.book') }}" class="btn btn-primary">
+                    <i class="fas fa-arrow-right"></i> 立即购票
+                </a>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4 mb-4">
+        <div class="card feature-card">
+            <div class="card-body">
+                <div class="feature-icon">
+                    <i class="fas fa-undo"></i>
+                </div>
+                <h5 class="card-title">退票服务</h5>
+                <p class="card-text">灵活的退票服务，为您的行程提供保障</p>
+                <a href="{{ url_for('tickets.refund') }}" class="btn btn-primary">
+                    <i class="fas fa-arrow-right"></i> 退票
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- 最新公告或优惠信息 -->
+<div class="card mb-5">
+    <div class="card-body">
+        <h5 class="card-title">
+            <i class="fas fa-bullhorn"></i> 最新公告
+        </h5>
+        <div class="alert alert-info mb-0">
+            <i class="fas fa-info-circle"></i> 
+            欢迎使用车站售票系统，为了给您提供更好的服务，系统正在不断优化升级中。
+        </div>
+    </div>
+</div>
+
+<!-- 系统特点 -->
+<div class="card mt-5">
+    <div class="card-body">
+        <h5 class="card-title text-center mb-4">
+            <i class="fas fa-star"></i> 系统特点
+        </h5>
+        <div class="row text-center">
+            <div class="col-md-3 mb-4">
+                <div class="feature-item">
+                    <i class="fas fa-clock fa-3x text-primary mb-3"></i>
+                    <h6>24小时服务</h6>
+                    <p class="text-muted small">全天候在线服务，随时随地购票</p>
+                </div>
+            </div>
+            <div class="col-md-3 mb-4">
+                <div class="feature-item">
+                    <i class="fas fa-shield-alt fa-3x text-success mb-3"></i>
+                    <h6>安全可靠</h6>
+                    <p class="text-muted small">采用先进加密技术，保障交易安全</p>
+                </div>
+            </div>
+            <div class="col-md-3 mb-4">
+                <div class="feature-item">
+                    <i class="fas fa-bolt fa-3x text-warning mb-3"></i>
+                    <h6>快速响应</h6>
+                    <p class="text-muted small">系统响应迅速，操作便捷高效</p>
+                </div>
+            </div>
+            <div class="col-md-3 mb-4">
+                <div class="feature-item">
+                    <i class="fas fa-headset fa-3x text-info mb-3"></i>
+                    <h6>专业支持</h6>
+                    <p class="text-muted small">专业的客服团队，为您解答疑问</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %} 

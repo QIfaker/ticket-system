@@ -1,0 +1,84 @@
+{% extends "base.html" %}
+
+{% block title %}统计数据{% endblock %}
+
+{% block content %}
+<div class="card">
+    <div class="card-body">
+        <h2 class="card-title">
+            <i class="fas fa-chart-bar"></i> 统计数据
+        </h2>
+        
+        <form class="row g-3 mb-4">
+            <div class="col-md-3">
+                <label class="form-label">统计周期</label>
+                <select name="period" class="form-select">
+                    <option value="daily" {% if period == 'daily' %}selected{% endif %}>
+                        日统计
+                    </option>
+                    <option value="monthly" {% if period == 'monthly' %}selected{% endif %}>
+                        月统计
+                    </option>
+                    <option value="yearly" {% if period == 'yearly' %}selected{% endif %}>
+                        年统计
+                    </option>
+                </select>
+            </div>
+            
+            <div class="col-md-3">
+                <label class="form-label">开始日期</label>
+                <input type="date" name="start_date" class="form-control" 
+                       value="{{ start_date }}">
+            </div>
+            
+            <div class="col-md-3">
+                <label class="form-label">结束日期</label>
+                <input type="date" name="end_date" class="form-control" 
+                       value="{{ end_date }}">
+            </div>
+            
+            <div class="col-md-3">
+                <label class="form-label">&nbsp;</label>
+                <button type="submit" class="btn btn-primary d-block w-100">
+                    <i class="fas fa-search"></i> 查询
+                </button>
+            </div>
+        </form>
+
+        <div class="table-responsive">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>日期</th>
+                        <th>售票数量</th>
+                        <th>退票数量</th>
+                        <th>总收入</th>
+                        <th>退票金额</th>
+                        {% if period != 'daily' %}
+                        <th>{{ '日' if period == 'monthly' else '月' }}均销售</th>
+                        <th>峰值{{ '日' if period == 'monthly' else '月' }}</th>
+                        <th>峰值销量</th>
+                        {% endif %}
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for stat in stats %}
+                    <tr>
+                        <td>{{ stat[0] }}</td>
+                        <td>{{ stat[1] }}</td>
+                        <td>{{ stat[2] or 0 }}</td>
+                        <td>¥{{ "%.2f"|format(stat[3]) }}</td>
+                        <td>¥{{ "%.2f"|format(stat[4] or 0) }}</td>
+                        {% if period != 'daily' %}
+                        <td>{{ "%.2f"|format(stat[5] or 0) }}</td>
+                        <td>{{ stat[6] or '-' }}</td>
+                        <td>{{ stat[7] or 0 }}</td>
+                        {% endif %}
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %} 

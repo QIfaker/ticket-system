@@ -1,0 +1,49 @@
+{% extends "base.html" %}
+
+{% block title %}车次查询{% endblock %}
+
+{% block content %}
+<h2>车次查询</h2>
+<form class="mb-4">
+    <div class="row">
+        <div class="col-md-4">
+            <input type="text" name="departure" class="form-control" placeholder="出发站">
+        </div>
+        <div class="col-md-4">
+            <input type="text" name="destination" class="form-control" placeholder="目的站">
+        </div>
+        <div class="col-md-4">
+            <button type="submit" class="btn btn-primary">查询</button>
+        </div>
+    </div>
+</form>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>车次</th>
+            <th>出发站</th>
+            <th>目的站</th>
+            <th>发车时间</th>
+            <th>到达时间</th>
+            <th>票价</th>
+            <th>操作</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for train in trains %}
+        <tr>
+            <td>{{ train[0] }}</td>
+            <td>{{ train[1] }}</td>
+            <td>{{ train[2] }}</td>
+            <td>{{ train[3] }}</td>
+            <td>{{ train[4] }}</td>
+            <td>¥{{ train[6] }}</td>
+            <td>
+                <a href="/book_ticket?train_id={{ train[0] }}" class="btn btn-sm btn-primary">购票</a>
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endblock %} 

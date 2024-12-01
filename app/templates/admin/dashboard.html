@@ -1,0 +1,92 @@
+{% extends "base.html" %}
+
+{% block title %}管理系统{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-12 mb-4">
+        <div class="card">
+            <div class="card-body">
+                <h2 class="card-title">
+                    <i class="fas fa-tachometer-alt"></i> 系统概览
+                </h2>
+                <div class="text-end mb-3">
+                    <a href="{{ url_for('admin.add_train') }}" class="btn btn-primary">
+                        <i class="fas fa-plus"></i> 添加车次
+                    </a>
+                    <a href="{{ url_for('admin.reports') }}" class="btn btn-info text-white">
+                        <i class="fas fa-chart-line"></i> 查看报表
+                    </a>
+                    <a href="{{ url_for('admin.statistics') }}" class="btn btn-success">
+                        <i class="fas fa-chart-bar"></i> 查看统计
+                    </a>
+                </div>
+                <div class="row mt-4">
+                    <div class="col-md-3">
+                        <div class="card bg-primary text-white">
+                            <div class="card-body">
+                                <h5 class="card-title">总车次数</h5>
+                                <h3>{{ trains|length }}</h3>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="card bg-success text-white">
+                            <div class="card-body">
+                                <h5 class="card-title">今日销售</h5>
+                                <h3>{{ sales|length }}</h3>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="card bg-info text-white">
+                            <div class="card-body">
+                                <h5 class="card-title">今日收入</h5>
+                                <h3>¥{{ "%.2f"|format(total_revenue) }}</h3>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-12">
+        <div class="card">
+            <div class="card-body">
+                <h5 class="card-title">车次列表</h5>
+                <div class="table-responsive">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>车次</th>
+                                <th>出发站</th>
+                                <th>目的站</th>
+                                <th>发车时间</th>
+                                <th>到达时间</th>
+                                <th>总座位数</th>
+                                <th>票价</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for train in trains %}
+                            <tr>
+                                <td>{{ train[0] }}</td>
+                                <td>{{ train[1] }}</td>
+                                <td>{{ train[2] }}</td>
+                                <td>{{ train[3] }}</td>
+                                <td>{{ train[4] }}</td>
+                                <td>{{ train[5] }}</td>
+                                <td>¥{{ train[6] }}</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %} 

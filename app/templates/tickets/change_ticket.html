@@ -1,0 +1,128 @@
+{% extends "base.html" %}
+
+{% block title %}车票改签{% endblock %}
+
+{% block content %}
+<div class="card">
+    <div class="card-body">
+        <h2 class="card-title">
+            <i class="fas fa-exchange-alt"></i> 车票改签
+        </h2>
+        
+        {% if ticket %}
+        <div class="row mb-4">
+            <div class="col-md-12">
+                <h5>原车票信息</h5>
+                <table class="table">
+                    <tr>
+                        <th>车次</th>
+                        <td>{{ ticket.train_id }}</td>
+                        <th>乘客</th>
+                        <td>{{ ticket.passenger_name }}</td>
+                    </tr>
+                    <tr>
+                        <th>出发站</th>
+                        <td>{{ ticket.departure }}</td>
+                        <th>目的站</th>
+                        <td>{{ ticket.destination }}</td>
+                    </tr>
+                    <tr>
+                        <th>发车时间</th>
+                        <td>{{ ticket.departure_time }}</td>
+                        <th>到达时间</th>
+                        <td>{{ ticket.arrival_time }}</td>
+                    </tr>
+                    <tr>
+                        <th>座位号</th>
+                        <td>{{ ticket.seat_number }}</td>
+                        <th>票价</th>
+                        <td>¥{{ "%.2f"|format(ticket.price) }}</td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+        
+        {% if available_trains %}
+        <form method="POST" class="change-ticket-form">
+            <input type="hidden" name="ticket_id" value="{{ ticket.ticket_id }}">
+            <div class="row">
+                <div class="col-md-12">
+                    <h5>可改签车次</h5>
+                    <div class="table-responsive">
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th>选择</th>
+                                    <th>车次</th>
+                                    <th>发车时间</th>
+                                    <th>到达时间</th>
+                                    <th>余票</th>
+                                    <th>票价</th>
+                                    <th>差价</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for train in available_trains %}
+                                <tr>
+                                    <td>
+                                        <input type="radio" name="new_train_id" 
+                                               value="{{ train.train_id }}" required>
+                                    </td>
+                                    <td>{{ train.train_id }}</td>
+                                    <td>{{ train.departure_time }}</td>
+                                    <td>{{ train.arrival_time }}</td>
+                                    <td>{{ train.available_seats }}</td>
+                                    <td>¥{{ "%.2f"|format(train.price) }}</td>
+                                    <td>
+                                        {% set price_diff = train.price - ticket.price %}
+                                        {% if price_diff > 0 %}
+                                            <span class="text-danger">+¥{{ "%.2f"|format(price_diff) }}</span>
+                                        {% elif price_diff < 0 %}
+                                            <span class="text-success">-¥{{ "%.2f"|format(-price_diff) }}</span>
+                                        {% else %}
+                                            <span class="text-muted">无差价</span>
+                                        {% endif %}
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="row mt-3">
+                <div class="col-12">
+                    <button type="submit" class="btn btn-primary">
+                        <i class="fas fa-check"></i> 确认改签
+                    </button>
+                    <a href="{{ url_for('tickets.search_person') }}" class="btn btn-secondary">
+                        <i class="fas fa-times"></i> 取消
+                    </a>
+                </div>
+            </div>
+        </form>
+        {% else %}
+        <div class="alert alert-warning">
+            <i class="fas fa-exclamation-triangle"></i> 
+            暂无可改签的车次，请选择其他日期或线路
+        </div>
+        {% endif %}
+        {% endif %}
+    </div>
+</div>
+
+<div class="card mt-4">
+    <div class="card-body">
+        <h5 class="card-title">
+            <i class="fas fa-info-circle"></i> 改签须知
+        </h5>
+        <ul class="list-unstyled">
+            <li><i class="fas fa-check text-success"></i> 改签需在发车前2小时完成</li>
+            <li><i class="fas fa-check text-success"></i> 如改签至较高票价车次需补差价</li>
+            <li><i class="fas fa-check text-success"></i> 如改签至较低票价车次可退差价</li>
+            <li><i class="fas fa-check text-success"></i> 改签成功后原车票自动作废</li>
+        </ul>
+    </div>
+</div>
+{% endblock %} 

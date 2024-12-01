@@ -1,0 +1,103 @@
+{% extends "base.html" %}
+
+{% block title %}个人车票查询{% endblock %}
+
+{% block content %}
+<div class="card">
+    <div class="card-body">
+        <h2 class="card-title">
+            <i class="fas fa-ticket-alt"></i> 个人车票查询
+        </h2>
+        
+        <form method="POST" class="row g-3 mb-4">
+            <div class="col-md-5">
+                <label class="form-label">乘客姓名</label>
+                <input type="text" name="name" class="form-control" 
+                       value="{{ user.real_name if user else '' }}"
+                       placeholder="请输入姓名">
+            </div>
+            
+            <div class="col-md-5">
+                <label class="form-label">身份证号</label>
+                <input type="text" name="id_number" class="form-control" 
+                       value="{{ user.id_number if user else '' }}"
+                       placeholder="请输入身份证号">
+            </div>
+            
+            <div class="col-md-2">
+                <label class="form-label">&nbsp;</label>
+                <button type="submit" class="btn btn-primary d-block w-100">
+                    <i class="fas fa-search"></i> 查询
+                </button>
+            </div>
+        </form>
+
+        {% if tickets %}
+        <div class="table-responsive">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>车票号</th>
+                        <th>车次</th>
+                        <th>乘客</th>
+                        <th>身份证号</th>
+                        <th>出发站</th>
+                        <th>目的站</th>
+                        <th>发车时间</th>
+                        <th>到达时间</th>
+                        <th>座位号</th>
+                        <th>票价</th>
+                        <th>状态</th>
+                        <th>购票时间</th>
+                        <th>操作</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for ticket in tickets %}
+                    <tr>
+                        <td>{{ ticket[0] }}</td>
+                        <td>{{ ticket[1] }}</td>
+                        <td>{{ ticket[10] }}</td>
+                        <td>{{ ticket[11] }}</td>
+                        <td>{{ ticket[2] }}</td>
+                        <td>{{ ticket[3] }}</td>
+                        <td>{{ ticket[4] }}</td>
+                        <td>{{ ticket[5] }}</td>
+                        <td>{{ ticket[6] }}</td>
+                        <td>¥{{ "%.2f"|format(ticket[9]) }}</td>
+                        <td>
+                            <span class="badge {% if ticket[8] == '已售' %}bg-success{% else %}bg-danger{% endif %}">
+                                {{ ticket[8] }}
+                            </span>
+                        </td>
+                        <td>{{ ticket[7] }}</td>
+                        <td>
+                            {% if ticket[8] == '已售' %}
+                                <form method="POST" action="{{ url_for('tickets.refund_ticket') }}" 
+                                      onsubmit="return confirm('确定要退票吗？');" style="display: inline;">
+                                    <input type="hidden" name="ticket_id" value="{{ ticket[0] }}">
+                                    <button type="submit" class="btn btn-sm btn-danger">
+                                        <i class="fas fa-undo"></i> 退票
+                                    </button>
+                                </form>
+                                <a href="{{ url_for('tickets.change_ticket', ticket_id=ticket[0]) }}" 
+                                   class="btn btn-sm btn-warning">
+                                    <i class="fas fa-exchange-alt"></i> 改签
+                                </a>
+                            {% endif %}
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        {% else %}
+            {% if request.method == 'POST' %}
+            <div class="alert alert-info">
+                <i class="fas fa-info-circle"></i> 未找到相关车票记录
+            </div>
+            {% endif %}
+        {% endif %}
+    </div>
+</div>
+{% endblock %} 

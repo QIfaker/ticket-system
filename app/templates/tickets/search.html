@@ -1,0 +1,151 @@
+{% extends "base.html" %}
+
+{% block title %}车次查询{% endblock %}
+
+{% block content %}
+<div class="card search-card">
+    <div class="card-body">
+        <h2 class="card-title mb-4">
+            <i class="fas fa-search"></i> 车次查询
+        </h2>
+        <form class="mb-4">
+            <div class="row g-3">
+                <div class="col-md-3">
+                    <div class="form-group">
+                        <label class="form-label">
+                            <i class="fas fa-map-marker-alt"></i> 出发站
+                        </label>
+                        <select name="departure" class="form-select" required>
+                            <option value="">请选择出发站</option>
+                            <option value="北京">北京</option>
+                            <option value="上海">上海</option>
+                            <option value="广州">广州</option>
+                            <option value="深圳">深圳</option>
+                            <option value="武汉">武汉</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="form-group">
+                        <label class="form-label">
+                            <i class="fas fa-map-marker"></i> 目的站
+                        </label>
+                        <select name="destination" class="form-select" required>
+                            <option value="">请选择目的站</option>
+                            <option value="北京">北京</option>
+                            <option value="上海">上海</option>
+                            <option value="广州">广州</option>
+                            <option value="深圳">深圳</option>
+                            <option value="武汉">武汉</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="form-group">
+                        <label class="form-label">
+                            <i class="fas fa-calendar-alt"></i> 出发日期
+                        </label>
+                        <input type="date" name="date" class="form-control" 
+                               min="{{ today }}" required>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="form-group">
+                        <label class="form-label">
+                            <i class="fas fa-clock"></i> 出发时间
+                        </label>
+                        <select name="time_range" class="form-select">
+                            <option value="">全天</option>
+                            <option value="morning">早上 (06:00-12:00)</option>
+                            <option value="afternoon">下午 (12:00-18:00)</option>
+                            <option value="evening">晚上 (18:00-24:00)</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+            <div class="row mt-3">
+                <div class="col-12 text-center">
+                    <button type="submit" class="btn btn-primary">
+                        <i class="fas fa-search"></i> 查询车次
+                    </button>
+                    <button type="reset" class="btn btn-secondary">
+                        <i class="fas fa-redo"></i> 重置
+                    </button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+{% if trains %}
+<div class="card mt-4">
+    <div class="card-body">
+        <div class="table-responsive">
+            <table class="table table-hover">
+                <thead>
+                    <tr>
+                        <th>车次</th>
+                        <th>出发站</th>
+                        <th>目的站</th>
+                        <th>发车时间</th>
+                        <th>到达时间</th>
+                        <th>历时</th>
+                        <th>余票</th>
+                        <th>票价</th>
+                        <th>操作</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for train in trains %}
+                    <tr>
+                        <td>
+                            <span class="badge bg-primary">{{ train[0] }}</span>
+                        </td>
+                        <td>{{ train[1] }}</td>
+                        <td>{{ train[2] }}</td>
+                        <td>
+                            <i class="far fa-clock"></i> {{ train[3] }}
+                        </td>
+                        <td>
+                            <i class="far fa-clock"></i> {{ train[4] }}
+                        </td>
+                        <td>2小时30分</td>
+                        <td>
+                            {% if train[5] > 20 %}
+                                <span class="badge bg-success">充足</span>
+                            {% elif train[5] > 0 %}
+                                <span class="badge bg-warning">紧张</span>
+                            {% else %}
+                                <span class="badge bg-danger">无票</span>
+                            {% endif %}
+                        </td>
+                        <td>
+                            <span class="price">¥{{ train[6] }}</span>
+                        </td>
+                        <td>
+                            {% if train[5] > 0 %}
+                                <a href="{{ url_for('tickets.book', train_id=train[0]) }}" 
+                                   class="btn btn-sm btn-primary">
+                                    <i class="fas fa-ticket-alt"></i> 购票
+                                </a>
+                            {% else %}
+                                <button class="btn btn-sm btn-secondary" disabled>
+                                    <i class="fas fa-ban"></i> 售罄
+                                </button>
+                            {% endif %}
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% else %}
+    {% if request.args %}
+        <div class="alert alert-info mt-4">
+            <i class="fas fa-info-circle"></i> 没有找到符合条件的车次
+        </div>
+    {% endif %}
+{% endif %}
+{% endblock %} 
